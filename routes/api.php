@@ -5,6 +5,7 @@ use App\Http\Controllers\User\Auth\GoogleAuthController;
 use App\Http\Controllers\User\Auth\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\User\AuthController;
 
 
 Route::middleware('auth:api')->group(function () {
@@ -50,8 +51,15 @@ Route::post('/products',function (){
 })->middleware('auth:api');
 
 //Test the auth2
-Route::post('/register', [Auth::class, 'register']);
-Route::post('/login',[Auth::class, 'login']);
-Route::get('/user',[Auth::class, 'user'])->middleware('auth:api');
-Route::post('/logout',[Auth::class, 'logout'])->middleware('auth:api');
+//Route::post('/register', [Auth::class, 'register']);
+//Route::post('/login',[Auth::class, 'login']);
+//Route::get('/user',[Auth::class, 'user'])->middleware('auth:api');
+//Route::post('/logout',[Auth::class, 'logout'])->middleware('auth:api');
+//
 
+//
+Route::post('/register1', [AuthController::class, 'registerWithCredentials']);
+Route::post('/register2', [AuthController::class, 'registerWithOAuth']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
+Route::post('/user', [AuthController::class, 'user'])->middleware('auth:api');

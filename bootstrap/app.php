@@ -14,23 +14,22 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function ($router) {
             Route::prefix('api-auth')
-//                ->middleware(['api','auth:admin-api','scopes:admin'])
-                ->name('auth')
                 ->group(base_path('routes/auth.php'));
 
             Route::prefix('api-admin')
 //                ->middleware(['api','auth:admin-api','scopes:admin'])
-                ->name('admin')
                 ->group(base_path('routes/admin-api.php'));
 
             Route::prefix('api-user')
-//                ->middleware(['api','auth:customer-api','scopes:customer'])
-                ->name('user')
                 ->group(base_path('routes/user-api.php'));
         }
     )
 
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append([
+//            \App\Http\Middleware\ClientMiddleware::class,
+            \App\Http\Middleware\ForceJsonResponse::class,
+        ]);
         $middleware->alias([
 //            'auth' => \App\Http\Middleware\Auth::class,
 
