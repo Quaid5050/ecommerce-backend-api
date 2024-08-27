@@ -71,21 +71,21 @@ class CategoryRepository implements CategoryRepositoryInterface
         return Category::with("brands")->find($categoryId);
     }
 
-    public function attachBrandWithCategory(int $categoryId, int $productId)
+    public function attachBrandWithCategory(int $categoryId, int $brandId)
     {
         try {
             $category = $this->findById($categoryId);
-            $category->brands()->attach($productId);
+            $category->brands()->attach($brandId);
         } catch (Exception $exception) {
             throw new Exception("Error attaching brand with category: " . $exception->getMessage());
         }
     }
 
-    public function detachBrandFromCategory(int $categoryId, int $productId)
+    public function detachBrandFromCategory(int $categoryId, int $brandId)
     {
         try {
             $category = $this->findById($categoryId);
-            $category->brands()->detach($productId);
+            $category->brands()->detach($brandId);
         } catch (Exception $exception) {
             throw new Exception("Error detaching brand with category: " . $exception->getMessage());
         }

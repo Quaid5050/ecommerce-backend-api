@@ -1,65 +1,49 @@
 <?php
 
-use App\Http\Controllers\Admin\Auth\AdminAuthController;
-use App\Http\Controllers\User\Auth\GoogleAuthController;
-use App\Http\Controllers\User\Auth\Auth;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\Public\{
+    ProductController,
+    CategoryController,
+    BrandController,
+    PrinterModelController,
+    SeriesController
+};
 
+// Default resource routes
+Route::apiResource('products', ProductController::class);
+Route::apiResource('categories', CategoryController::class);
+Route::apiResource('brands', BrandController::class);
+Route::apiResource('printer-models', PrinterModelController::class);
+Route::apiResource('series', SeriesController::class);
 
-Route::middleware('auth:api')->group(function () {
-    Route::post('/user', function (Request $request) {
-        return $request->user();
-    });
-});
-Route::post('/userr', function (Request $request) {
-    return $request->user();
-})->middleware('auth:api');
-
-Route::post('/user-detail', function (Request $request) {
-    return auth()->user();
-});
-//TEST LARAVEL API..
-Route::get('/', function () {
-    return response()->json(['message' => 'Hello World!']);
-});
-
-//Authentication routes
-Route::post('admin/register', [AdminAuthController::class, 'register']);
-Route::post('admin/login', [AdminAuthController::class, 'login']);
-
-Route::group(['middleware' => ['web']], function () {
-    Route::get('auth/google', [GoogleAuthController::class, 'redirectToGoogle']);
-    Route::get('auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
+// Additional routes
+Route::prefix('categories')->controller(CategoryController::class)->group(function () {
+    Route::get('{id}/brands', 'getCategoriesWithBrands');
+    Route::get('{id}/category-brands', 'getCategoryWithBrands');
+    Route::post('{categoryId}/attach-brand/{brandId}', 'attachBrandWithCategory');
+    Route::delete('{categoryId}/detach-brand/{brandId}', 'detachBrandFromCategory');
 });
 
-Route::post('auth/clientAuth', [GoogleAuthController::class, 'clientAuth']);
-Route::post('auth/test',[GoogleAuthController::class,"test"]);
+Route::prefix('brands')->controller(BrandController::class)->group(function () {
+    Route::get('brands-categories', 'getBrandsWithCategories');
+    Route::get('{id}/brand-categories', 'getBrandWithCategories');
+    Route::get('{id}/brand-series', 'getBrandWithSeries');
+    Route::get('{id}/brand-series-printer-models', 'getBrandWithSeriesAndPrinterModels');
+});
 
-Route::post('auth/logout',[GoogleAuthController::class,"logout"])->middleware('auth:api');
+Route::prefix('printer-models')->controller(PrinterModelController::class)->group(function () {
+    Route::post('{printerModelId}/attach-product/{productId}', 'attachProductWithPrinterModel');
+    Route::delete('{printerModelId}/detach-product/{productId}', 'detachProductFromPrinterModel');
+    Route::get('printer-models-products', 'getPrinterModelsWithProducts');
+    Route::get('{printerModelId}/printer-model-products', 'getPrinterModelWithProducts');
+});
 
-Route::post('/products',function (){
-    $products = [
-        ['id' => 1, 'name' => 'Product 1'],
-        ['id' => 2, 'name' => 'Product 2'],
-        ['id' => 3, 'name' => 'Product 3'],
-        ['id' => 4, 'name' => 'Product 4'],
-        ['id' => 5, 'name' => 'Product 6'],
-    ];
-    return response()->json($products);
-})->middleware('auth:api');
+Route::prefix('products')->controller(ProductController::class)->group(function () {
+    Route::get('products-printer-models', 'getProductsWithPrinterModels');
+    Route::get('{productId}/product-printer-models', 'findProductWithPrinterModels');
+});
 
-//Test the auth2
-//Route::post('/register', [Auth::class, 'register']);
-//Route::post('/login',[Auth::class, 'login']);
-//Route::get('/user',[Auth::class, 'user'])->middleware('auth:api');
-//Route::post('/logout',[Auth::class, 'logout'])->middleware('auth:api');
-//
-
-//
-Route::post('/register1', [AuthController::class, 'registerWithCredentials']);
-Route::post('/register2', [AuthController::class, 'registerWithOAuth']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
-Route::post('/user', [AuthController::class, 'user'])->middleware('auth:api');
+Route::prefix('series')->controller(SeriesController::class)->group(function () {
+    Route::get('series-printer-models', 'getSeriesWithPrinterModels');
+    Route::get('{seriesId}/series-printer-models', 'findSeriesWithPrinterModels');
+});

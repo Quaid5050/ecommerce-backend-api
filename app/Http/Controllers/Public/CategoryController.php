@@ -72,7 +72,6 @@ class CategoryController extends Controller
             return $this->errorResponse($e->getMessage(), 500);
         }
     }
-
     public function getCategoriesWithBrands(int $id)
     {
         try {
@@ -92,20 +91,20 @@ class CategoryController extends Controller
             return $this->errorResponse($e->getMessage(), 500);
         }
     }
-    public function attachBrandWithCategory(int $categoryId, int $productId)
+    public function attachBrandWithCategory(int $categoryId, int $brandId)
     {
         try {
-            $this->categoryRepository->attachBrandWithCategory($categoryId, $productId);
+            $this->categoryRepository->attachBrandWithCategory($categoryId, $brandId);
             return $this->successResponse([], 'Brand attached to category successfully.', 201);
         } catch (Exception $e) {
             return $this->errorResponse("Brand attached to category failed",$e->getMessage(), 500);
         }
     }
 
-    public function detachBrandFromCategory(int $categoryId, int $productId)
+    public function detachBrandFromCategory(int $categoryId, int $brandId)
     {
         try {
-            $this->categoryRepository->detachBrandFromCategory($categoryId, $productId);
+            $this->categoryRepository->detachBrandFromCategory($categoryId, $brandId);
             return $this->successResponse([], 'Brand detached from category successfully.', 201);
         } catch (Exception $e) {
             return $this->errorResponse("Brand detached from category failed",$e->getMessage(), 500);
