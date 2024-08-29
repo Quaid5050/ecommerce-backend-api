@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
+use App\Http\Resources\CategoryResource;
 use App\Interfaces\CategoryRepositoryInterface;
 use App\Traits\ApiResponseTrait;
 use Exception;
@@ -23,7 +24,9 @@ class CategoryController extends Controller
     {
         try {
             $categories = $this->categoryRepository->all();
-            return $this->successResponse($categories, 'Categories retrieved successfully.');
+            return $this->successResponse([
+                CategoryResource::collection($categories),
+            ], 'Categories retrieved successfully.');
         } catch (Exception $e) {
             return $this->errorResponse("Categories retrieved failed",$e->getMessage());
         }
@@ -33,7 +36,9 @@ class CategoryController extends Controller
     {
         try {
             $category = $this->categoryRepository->create($request->validated());
-            return $this->successResponse($category, 'Category created successfully.', 201);
+            return $this->successResponse([
+                new CategoryResource($category),
+            ], 'Category created successfully.', 201);
         } catch (Exception $e) {
             return $this->errorResponse("Category created failed",$e->getMessage());
         }
@@ -44,7 +49,9 @@ class CategoryController extends Controller
         try {
             $category = $this->categoryRepository->findById($id);
             if ($category) {
-                return $this->successResponse($category, 'Category retrieved successfully.');
+                return $this->successResponse([
+                    new CategoryResource($category),
+                ], 'Category retrieved successfully.');
             } else {
                 return $this->errorResponse('Category not found.', [],404);
             }
@@ -57,7 +64,9 @@ class CategoryController extends Controller
     {
         try {
             $category = $this->categoryRepository->update($request->validated(), $id);
-            return $this->successResponse($category, 'Category updated successfully.');
+            return $this->successResponse([
+                new CategoryResource($category),
+            ], 'Category updated successfully.');
         } catch (Exception $e) {
             return $this->errorResponse("Fail to Update",$e->getMessage(), 500);
         }
@@ -76,7 +85,9 @@ class CategoryController extends Controller
     {
         try {
             $categories = $this->categoryRepository->getCategoriesWithBrands($id);
-            return $this->successResponse($categories, 'Retrieved successfully.');
+            return $this->successResponse([
+                CategoryResource::collection($categories),
+            ], 'Retrieved successfully.');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }
@@ -86,7 +97,9 @@ class CategoryController extends Controller
     {
         try {
             $category = $this->categoryRepository->getCategoryWithBrands($id);
-            return $this->successResponse($category, 'Retrieved successfully.');
+            return $this->successResponse([
+                new CategoryResource($category),
+            ], 'Retrieved successfully.');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }

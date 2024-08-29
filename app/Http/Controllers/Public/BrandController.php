@@ -84,7 +84,9 @@ class BrandController extends Controller
     {
         try {
             $categories = $this->brandRepository->getBrandsWithCategories();
-            return $this->successResponse($categories, 'Retrieved successfully.');
+            return $this->successResponse([
+                BrandResource::collection($categories),
+            ], 'Retrieved successfully.');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage());
         }
@@ -93,7 +95,9 @@ class BrandController extends Controller
     {
         try {
             $categories = $this->brandRepository->getBrandWithCategories($id);
-            return $this->successResponse($categories, 'Retrieved successfully.');
+            return $this->successResponse([
+                new BrandResource($categories),
+                ], 'Retrieved successfully.');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage());
         }
@@ -102,7 +106,9 @@ class BrandController extends Controller
     {
         try {
             $series = $this->brandRepository->getBrandWithSeries($id);
-            return $this->successResponse($series, 'Brand with Series retrieved successfully.');
+            return $this->successResponse([
+                new BrandResource($series),
+            ], 'Brand with Series retrieved successfully.');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage());
         }
@@ -112,7 +118,9 @@ class BrandController extends Controller
     {
         try {
             $series = $this->brandRepository->getBrandWithSeriesAndPrinterModels($id);
-            return $this->successResponse($series, 'Brand with Series & Printer Models retrieved successfully.');
+            return $this->successResponse([
+                new BrandResource($series),
+                ], 'Brand with Series & Printer Models retrieved successfully.');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage());
         }
