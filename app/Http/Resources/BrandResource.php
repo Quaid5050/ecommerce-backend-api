@@ -10,7 +10,13 @@ class BrandResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
+            'categories' =>  $this->when(
+                $this->relationLoaded('categories') && $this->categories->isNotEmpty(),
+                CategoryResource::collection($this->categories)),
+            'series' =>  $this->when(
+                $this->relationLoaded('series') && $this->series->isNotEmpty(),
+                CategoryResource::collection($this->series)),
         ];
     }
 }

@@ -64,8 +64,7 @@ class BrandRepository implements BrandRepositoryInterface
 
     public  function getBrandWithCategories(int $brandId)
     {
-        $brand = $this->findById($brandId);
-        return $brand->with('categories')->get();
+        return Brand::with('categories')->find($brandId);
     }
     public function getBrandWithSeries(int $brandId)
     {

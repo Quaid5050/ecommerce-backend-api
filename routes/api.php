@@ -18,7 +18,7 @@ Route::apiResource('series', SeriesController::class);
 
 // Additional routes
 Route::prefix('categories')->controller(CategoryController::class)->group(function () {
-    Route::get('{id}/brands', 'getCategoriesWithBrands');
+    Route::get('brands', 'getCategoriesWithBrands');
     Route::get('{id}/category-brands', 'getCategoryWithBrands');
     Route::post('{categoryId}/attach-brand/{brandId}', 'attachBrandWithCategory');
     Route::delete('{categoryId}/detach-brand/{brandId}', 'detachBrandFromCategory');

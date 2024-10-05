@@ -81,12 +81,12 @@ class CategoryController extends Controller
             return $this->errorResponse($e->getMessage(), 500);
         }
     }
-    public function getCategoriesWithBrands(int $id)
+    public function getCategoriesWithBrands()
     {
         try {
-            $categories = $this->categoryRepository->getCategoriesWithBrands($id);
+            $categories = $this->categoryRepository->getCategoriesWithBrands();
             return $this->successResponse([
-                CategoryResource::collection($categories),
+               new CategoryResource($categories),
             ], 'Retrieved successfully.');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
